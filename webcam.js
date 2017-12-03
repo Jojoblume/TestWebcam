@@ -1,16 +1,17 @@
+//Source: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
 
-var video = document.querySelector("#videoElement");
+var constraints = { video: true};
 
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
-
-if (navigator.getUserMedia) {
-    navigator.getUserMedia({video: true}, handleVideo, videoError);
-}
-
-function handleVideo(stream) {
-    video.src = window.URL.createObjectURL(stream);
-}
-
-function videoError(e) {
-    // do something
-}
+navigator.mediaDevices.getUserMedia(constraints)
+.then(function(stream) {
+  /* use the stream */
+  var video = document.querySelector('video');
+  video.srcObject = stream;
+  video.onloadedmetadata = function(e) {
+    video.play();
+  }
+})
+.catch(function(err) {
+  /* handle the error */
+  console.log(err.name + ": " + err.message);
+})
